@@ -21,14 +21,8 @@ faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 videoCapture = cv2.VideoCapture(0)
 
 emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
-frameCounter = 0
 
 while True:
-    frameCounter += 1
-    if frameCounter % 3 != 0:
-        continue
-
-    # Capture frame-by-frame
     ret, frame = videoCapture.read()
 
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -40,11 +34,9 @@ while True:
         minSize=(30, 30),
     )
 
-    # Draw a rectangle around the faces
     for (x, y, w, h) in facesList:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cropFrame = grayFrame[y:y + h, x:x + w]
-
 
         cropFrameResized = np.resize(cropFrame, (1, 48, 48))
         cropFrameResized = np.expand_dims(cropFrameResized, -1)
@@ -59,6 +51,5 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# When everything is done, release the capture
 videoCapture.release()
 cv2.destroyAllWindows()
